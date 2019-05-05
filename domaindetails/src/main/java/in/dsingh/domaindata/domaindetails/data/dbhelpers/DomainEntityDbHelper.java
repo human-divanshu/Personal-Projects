@@ -89,4 +89,17 @@ public class DomainEntityDbHelper {
     domainEntityRepository.save(domainEntityList);
     return new SuccessResponse();
   }
+
+  public List<DomainEntity> getDomainToSendEmail() {
+    return domainEntityRepository.getDomainToSendEmail();
+  }
+
+  @Transactional
+  public void markRecordUploaded(DomainEntity entity, Boolean error, String fromEmailId) {
+    DomainEntity domainEntity = domainEntityRepository.findOne(entity.getId());
+    domainEntity.setUploaded(true);
+    domainEntity.setErrorSendingEmail(error);
+    domainEntity.setFromEmailId(fromEmailId);
+    domainEntityRepository.save(domainEntity);
+  }
 }

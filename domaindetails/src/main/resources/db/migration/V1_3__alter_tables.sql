@@ -1,0 +1,1 @@
+alter table domain_entity add column from_email_id varchar(255);

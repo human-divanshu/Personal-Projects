@@ -1,0 +1,1 @@
+alter table domain_entity add column error_sending_email tinyint(1) DEFAULT '0';
