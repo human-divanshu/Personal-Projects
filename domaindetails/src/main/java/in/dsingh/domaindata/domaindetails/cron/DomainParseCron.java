@@ -34,7 +34,7 @@ public class DomainParseCron {
   @Autowired
   private EmailEntityRepository emailEntityRepository;
 
-  private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(20);
+  private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(40);
 
   @Scheduled(fixedDelayString = "30000")
   public void fetchRecordAndParse() {
