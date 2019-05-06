@@ -20,7 +20,7 @@ public class DictCheck {
 
   @PostConstruct
   public void loadDict() {
-//    dict = new HashSet<>();
+    dict = new HashSet<>();
 //    ClassLoader classLoader = getClass().getClassLoader();
 //    File file = new File(classLoader.getResource("/20k.txt").getFile());
 //    try {
