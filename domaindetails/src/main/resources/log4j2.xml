@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration strict="true">
+
+    <Properties>
+        <Property name="baseDir">/log/middleware-passgateway-service</Property>
+        <Property name="prefix">${hostName}</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile fileName="${baseDir}/${prefix}_application.log" filePattern="${baseDir}/archive/${prefix}_application-%d{yyyy-MM-dd}-%i.log.gz"
+            name="APP_FILE">
+            <JSONLayout compact="true" complete="false" eventEol="true" properties="true"/>
+            <!--<MaskedJsonLayout charset="UTF-8"/>-->
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="200 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile fileName="${baseDir}/${prefix}_debug.log" filePattern="${baseDir}/archive/${prefix}_debug-%d{yyyy-MM-dd}-%i.log.gz"
+            name="DEBUG_FILE">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %X{Request-Token} - %X{Solution-Type} - %X{Partner-Id} - %msg%n
+                </pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="200 MB"/>
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Logger level="INFO" name="org.springframework"/>
+
+        <Root level="INFO">
+            <AppenderRef ref="APP_FILE"/>
+            <AppenderRef ref="DEBUG_FILE"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
