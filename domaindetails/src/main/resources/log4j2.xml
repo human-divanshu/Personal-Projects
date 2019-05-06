@@ -2,7 +2,7 @@
 <Configuration strict="true">
 
     <Properties>
-        <Property name="baseDir">/logs/domaindetails-service</Property>
+        <Property name="baseDir">/log/domaindetails-service</Property>
         <Property name="prefix">${hostName}</Property>
     </Properties>
 
