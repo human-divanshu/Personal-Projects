@@ -22,7 +22,7 @@ public class DictCheck {
   public void loadDict() {
     dict = new HashSet<>();
     ClassLoader classLoader = getClass().getClassLoader();
-    File file = new File(classLoader.getResource("20k.txt").getFile());
+    File file = new File(classLoader.getResource("/20k.txt").getFile());
     try {
       BufferedReader reader = new BufferedReader(new FileReader(file));
       String line;
