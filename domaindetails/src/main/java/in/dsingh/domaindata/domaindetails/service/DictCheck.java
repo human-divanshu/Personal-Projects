@@ -54,6 +54,7 @@ public class DictCheck {
     addWords18();
     addWords19();
     addWords20();
+    log.info("Dict loaded with size {}", dict.size());
   }
 
   private static void addWords1() {
