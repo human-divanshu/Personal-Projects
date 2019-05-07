@@ -91,7 +91,9 @@ public class DomainParseTask implements Runnable {
         DomainEntity domainEntity = domainEntityRepository
             .findFirstByDomainNameIs(domainHealth.getDomainName());
         domainEntity.setTitleText(websiteMetaInfoResponse.get().getTitleText());
-        domainEntity.setBodyText(websiteMetaInfoResponse.get().getBodyText());
+        int endIndex = (websiteMetaInfoResponse.get().getBodyText().length() > 160) ? 160
+            : websiteMetaInfoResponse.get().getBodyText().length() - 1;
+        domainEntity.setBodyText(websiteMetaInfoResponse.get().getBodyText().substring(0, endIndex));
         List<EmailEntity> emailEntityList = new ArrayList<>();
         for (String email : emails) {
           EmailEntity emailEntity = new EmailEntity(email, domainEntity);
