@@ -82,7 +82,9 @@ public class SendEmailCron {
           String titleText =
               (StringUtils.isEmpty(entity.getTitleText())) ? "" : entity.getTitleText();
           String bodyText = (StringUtils.isEmpty(entity.getBodyText())) ? "" : entity.getBodyText();
-          bodyText = bodyText.substring(titleText.length(), bodyText.length() - 1);
+          if(bodyText.length() > 2) {
+            bodyText = bodyText.substring(titleText.length(), bodyText.length() - 1);
+          }
           SendEmailRequest sendEmailRequest = new SendEmailRequest(String.valueOf(entity.getId()),
               entity.getDomainName(), emailId, fromEmailId, titleText.trim(),
               bodyText.trim(), "kuchbhi");
