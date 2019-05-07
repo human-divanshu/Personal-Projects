@@ -80,9 +80,10 @@ public class SendEmailCron {
         String fromEmailId = getNextFromEmailId();
         String titleText = (StringUtils.isEmpty(entity.getTitleText())) ? "" : entity.getTitleText();
         String bodyText = (StringUtils.isEmpty(entity.getBodyText())) ? "" : entity.getBodyText();
+        bodyText = bodyText.substring(titleText.length(), bodyText.length() -1);
         SendEmailRequest sendEmailRequest = new SendEmailRequest(String.valueOf(entity.getId()),
-            entity.getDomainName(), emailId, fromEmailId, titleText,
-            bodyText, "kuchbhi");
+            entity.getDomainName(), emailId, fromEmailId, titleText.trim(),
+            bodyText.trim(), "kuchbhi");
         Boolean successResponse = emailsService.sendEmail(sendEmailRequest);
 
         if(successResponse) {
@@ -120,5 +121,9 @@ public class SendEmailCron {
     }
 
     return null;
+  }
+
+  public Boolean getEmailSendingStatus() {
+    return sendEmail;
   }
 }

@@ -43,7 +43,7 @@ public class DomainParseCron {
 
     Integer activeThreads = DomainParseTask.getThreadCount();
 
-    if(activeThreads > 5) {
+    if(activeThreads > 10) {
       log.info("Exiting cron job because no threads available. Current active threads {} ", activeThreads);
       return;
     }

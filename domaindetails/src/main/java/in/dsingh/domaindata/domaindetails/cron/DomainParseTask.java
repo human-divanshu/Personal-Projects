@@ -97,7 +97,8 @@ public class DomainParseTask implements Runnable {
           EmailEntity emailEntity = new EmailEntity(email, domainEntity);
           emailEntityList.add(emailEntity);
         }
-        emailEntityRepository.save(emailEntityList);
+        domainEntity.setEmailEntityList(emailEntityList);
+        domainEntityRepository.save(domainEntity);
         domainEntityDbHelper.markParsedVisited(domainHealth.getDomainName());
       } else {
         throw new Exception();
