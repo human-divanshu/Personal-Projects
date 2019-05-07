@@ -61,10 +61,10 @@ public class SendEmailCron {
 
     List<DomainEntity> domainEntityList = domainEntityDbHelper.getDomainToSendEmail();
 
-    if(CollectionUtils.isEmpty(domainEntityList)) {
-      log.info("No domains to send emails to");
-      return;
-    }
+//    if(CollectionUtils.isEmpty(domainEntityList)) {
+//      log.info("No domains to send emails to");
+//      return;
+//    }
 
     for(DomainEntity entity : domainEntityList) {
       List<EmailEntity> emailEntityList = entity.getEmailEntityList();
@@ -77,19 +77,24 @@ public class SendEmailCron {
           continue;
         }
 
-        String fromEmailId = getNextFromEmailId();
-        String titleText = (StringUtils.isEmpty(entity.getTitleText())) ? "" : entity.getTitleText();
-        String bodyText = (StringUtils.isEmpty(entity.getBodyText())) ? "" : entity.getBodyText();
-        bodyText = bodyText.substring(titleText.length(), bodyText.length() -1);
-        SendEmailRequest sendEmailRequest = new SendEmailRequest(String.valueOf(entity.getId()),
-            entity.getDomainName(), emailId, fromEmailId, titleText.trim(),
-            bodyText.trim(), "kuchbhi");
-        Boolean successResponse = emailsService.sendEmail(sendEmailRequest);
+        try {
+          String fromEmailId = getNextFromEmailId();
+          String titleText =
+              (StringUtils.isEmpty(entity.getTitleText())) ? "" : entity.getTitleText();
+          String bodyText = (StringUtils.isEmpty(entity.getBodyText())) ? "" : entity.getBodyText();
+          bodyText = bodyText.substring(titleText.length(), bodyText.length() - 1);
+          SendEmailRequest sendEmailRequest = new SendEmailRequest(String.valueOf(entity.getId()),
+              entity.getDomainName(), emailId, fromEmailId, titleText.trim(),
+              bodyText.trim(), "kuchbhi");
+          Boolean successResponse = emailsService.sendEmail(sendEmailRequest);
 
-        if(successResponse) {
-          domainEntityDbHelper.markRecordUploaded(entity, false, fromEmailId);
-        } else {
-          domainEntityDbHelper.markRecordUploaded(entity, true, fromEmailId);
+          if (successResponse) {
+            domainEntityDbHelper.markRecordUploaded(entity, false, fromEmailId);
+          } else {
+            domainEntityDbHelper.markRecordUploaded(entity, true, fromEmailId);
+          }
+        } catch (Exception e) {
+          log.error("Error while sending email due to exception {}", e);
         }
 
         break;

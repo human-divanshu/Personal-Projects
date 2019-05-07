@@ -47,7 +47,7 @@ public class EmailsService {
         return true;
       }
     } catch (Exception e) {
-      log.error("Error occured while sending email");
+      log.error("Error occured while sending email with response {}", responseEntity);
     }
     return false;
   }
