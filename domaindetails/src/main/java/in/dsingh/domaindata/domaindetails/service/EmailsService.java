@@ -38,6 +38,7 @@ public class EmailsService {
   }
 
   public Boolean sendEmail(SendEmailRequest sendEmailRequest) {
+    log.info("Trying to send email with request details {}", sendEmailRequest);
     ResponseEntity<String> responseEntity = null;
     try {
       responseEntity = restTemplate
