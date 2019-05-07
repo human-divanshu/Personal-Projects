@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Service
 @Slf4j
@@ -28,6 +30,9 @@ public class SendEmailCron {
   private static List<String> fromEmailList = new ArrayList<>();
 
   private static Integer currentFromEmailIndex;
+
+  @Value("${run.email.send.cron}")
+  private Boolean sendEmail;
 
   static {
     emailSubStrings.add("@gmail.com");
@@ -50,6 +55,10 @@ public class SendEmailCron {
   @Scheduled(fixedDelayString = "150000")
   public void sendEmail() {
 
+    if(!sendEmail) {
+      return;
+    }
+
     List<DomainEntity> domainEntityList = domainEntityDbHelper.getDomainToSendEmail();
 
     if(CollectionUtils.isEmpty(domainEntityList)) {
@@ -69,9 +78,11 @@ public class SendEmailCron {
         }
 
         String fromEmailId = getNextFromEmailId();
+        String titleText = (StringUtils.isEmpty(entity.getTitleText())) ? "" : entity.getTitleText();
+        String bodyText = (StringUtils.isEmpty(entity.getBodyText())) ? "" : entity.getBodyText();
         SendEmailRequest sendEmailRequest = new SendEmailRequest(String.valueOf(entity.getId()),
-            entity.getDomainName(),
-            emailId, fromEmailId, "kuchbhi");
+            entity.getDomainName(), emailId, fromEmailId, titleText,
+            bodyText, "kuchbhi");
         Boolean successResponse = emailsService.sendEmail(sendEmailRequest);
 
         if(successResponse) {

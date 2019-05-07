@@ -1,6 +1,8 @@
 package in.dsingh.domaindata.domaindetails.service;
 
 import in.dsingh.domaindata.domaindetails.cron.DomainHealth;
+import in.dsingh.domaindata.domaindetails.cron.response.WebsiteMetaInfoResponse;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,12 +21,12 @@ public class WebPageParserTest {
 
   @Test
   public void parseWorks() {
-    Set<String> urlList = webPageParser.getUrlList(domainHealth);
-    for(String url: urlList) {
+    Optional<WebsiteMetaInfoResponse> response = webPageParser.getUrlList(domainHealth);
+    for(String url: response.get().getUrls()) {
       System.out.println(url);
     }
 
-    Set<String> emails = webPageParser.getEmails(urlList);
+    Set<String> emails = webPageParser.getEmails(response.get().getUrls());
     for(String email: emails) {
       System.out.println(email);
     }

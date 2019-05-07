@@ -20,5 +20,9 @@ public class SendEmailRequest {
   @NotBlank
   private String from;
 
+  private String titleText;
+
+  private String bodyText;
+
   private String sendPass = "something";
 }

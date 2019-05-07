@@ -1,10 +1,12 @@
 package in.dsingh.domaindata.domaindetails.service;
 
 import in.dsingh.domaindata.domaindetails.cron.DomainHealth;
+import in.dsingh.domaindata.domaindetails.cron.response.WebsiteMetaInfoResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +43,7 @@ public class WebPageParser {
     return document;
   }
 
-  public Set<String> getUrlList(DomainHealth domainHealth) {
+  public Optional<WebsiteMetaInfoResponse> getUrlList(DomainHealth domainHealth) {
 
     Set<String> urlList = new HashSet<>();
 
@@ -55,6 +57,7 @@ public class WebPageParser {
       LOGGER.info("Connecting to URL {}", url);
 
       Document document = getDocument(url);
+      WebsiteMetaInfoResponse websiteMetaInfoResponse = new WebsiteMetaInfoResponse();
 
       if (document != null) {
         Elements linkElements = document.select("a");
@@ -64,9 +67,15 @@ public class WebPageParser {
             urlList.add(newUrl);
           }
         }
+        websiteMetaInfoResponse.setUrls(urlList);
+        websiteMetaInfoResponse.setBodyText(document.text());
+        websiteMetaInfoResponse.setTitleText(document.title());
+
+        return Optional.of(websiteMetaInfoResponse);
       }
     }
-    return urlList;
+
+    return Optional.empty();
   }
 
   private boolean isContactPage(String newUrl) {

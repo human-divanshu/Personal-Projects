@@ -1,5 +1,6 @@
 package in.dsingh.domaindata.domaindetails.cron;
 
+import in.dsingh.domaindata.domaindetails.cron.response.WebsiteMetaInfoResponse;
 import in.dsingh.domaindata.domaindetails.data.dbhelpers.DomainEntityDbHelper;
 import in.dsingh.domaindata.domaindetails.data.entities.DomainEntity;
 import in.dsingh.domaindata.domaindetails.data.entities.EmailEntity;
@@ -9,6 +10,7 @@ import in.dsingh.domaindata.domaindetails.service.DomainHealthChecker;
 import in.dsingh.domaindata.domaindetails.service.WebPageParser;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
@@ -77,11 +79,19 @@ public class DomainParseTask implements Runnable {
   private void doParse(DomainHealth domainHealth) {
 
     try {
-      Set<String> urlList = webPageParser.getUrlList(domainHealth);
-      Set<String> emails = webPageParser.getEmails(urlList);
+      Optional<WebsiteMetaInfoResponse> websiteMetaInfoResponse = webPageParser.getUrlList(domainHealth);
+
+      if(!websiteMetaInfoResponse.isPresent()) {
+        throw new Exception();
+      }
+
+      Set<String> emails = webPageParser.getEmails(websiteMetaInfoResponse.get().getUrls());
+
       if (!CollectionUtils.isEmpty(emails)) {
         DomainEntity domainEntity = domainEntityRepository
             .findFirstByDomainNameIs(domainHealth.getDomainName());
+        domainEntity.setTitleText(websiteMetaInfoResponse.get().getTitleText());
+        domainEntity.setBodyText(websiteMetaInfoResponse.get().getBodyText());
         List<EmailEntity> emailEntityList = new ArrayList<>();
         for (String email : emails) {
           EmailEntity emailEntity = new EmailEntity(email, domainEntity);

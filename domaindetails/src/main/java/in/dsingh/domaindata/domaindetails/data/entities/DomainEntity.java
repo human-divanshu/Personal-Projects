@@ -70,6 +70,10 @@ public class DomainEntity {
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "domainEntity", cascade = CascadeType.ALL)
   private List<EmailEntity> emailEntityList;
 
+  private String titleText;
+
+  private String bodyText;
+
   public DomainEntity(String name, DnpediaCronEntity record, String verificationSubstring, Long domainScore) {
     this.domainName = name;
     this.dnpediaCronEntity = record;
