@@ -73,7 +73,7 @@ public class WebPageParser {
         }
 
         websiteMetaInfoResponse.setUrls(urlList);
-        websiteMetaInfoResponse.setBodyText(getWordsAsString(document.text(), bodyLength));
+        websiteMetaInfoResponse.setBodyText(getWordsAsString(document.body().text(), bodyLength));
         websiteMetaInfoResponse.setTitleText(getWordsAsString(document.title(), titleLength));
 
         return Optional.of(websiteMetaInfoResponse);
