@@ -1,5 +1,7 @@
 package in.dsingh.domaindata.domaindetails.cron;
 
+import static in.dsingh.domaindata.domaindetails.service.RequestValidator.getWordsAsString;
+
 import in.dsingh.domaindata.domaindetails.controllers.request.SendEmailRequest;
 import in.dsingh.domaindata.domaindetails.data.dbhelpers.DomainEntityDbHelper;
 import in.dsingh.domaindata.domaindetails.data.entities.DomainEntity;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 @Service
 @Slf4j
@@ -61,10 +62,10 @@ public class SendEmailCron {
 
     List<DomainEntity> domainEntityList = domainEntityDbHelper.getDomainToSendEmail();
 
-//    if(CollectionUtils.isEmpty(domainEntityList)) {
-//      log.info("No domains to send emails to");
-//      return;
-//    }
+    if(CollectionUtils.isEmpty(domainEntityList)) {
+      log.info("No domains to send emails to");
+      return;
+    }
 
     for(DomainEntity entity : domainEntityList) {
       List<EmailEntity> emailEntityList = entity.getEmailEntityList();
@@ -73,21 +74,16 @@ public class SendEmailCron {
         String emailId = getValidEmail(emailEntityList);
 
         if(emailId == null) {
+          log.info("No emails found for entity {} hence marking done");
           domainEntityDbHelper.markRecordUploaded(entity, false, null);
           continue;
         }
 
         try {
           String fromEmailId = getNextFromEmailId();
-          String titleText =
-              (StringUtils.isEmpty(entity.getTitleText())) ? "" : entity.getTitleText();
-          String bodyText = (StringUtils.isEmpty(entity.getBodyText())) ? "" : entity.getBodyText();
-          if(bodyText.length() > 2) {
-            bodyText = bodyText.substring(titleText.length(), bodyText.length() - 1);
-          }
           SendEmailRequest sendEmailRequest = new SendEmailRequest(String.valueOf(entity.getId()),
-              entity.getDomainName(), emailId, fromEmailId, titleText.trim(),
-              bodyText.trim(), "kuchbhi");
+              entity.getDomainName(), emailId, fromEmailId, getWordsAsString(entity.getTitleText()),
+              getWordsAsString(entity.getBodyText()), "kuchbhi");
           Boolean successResponse = emailsService.sendEmail(sendEmailRequest);
 
           if (successResponse) {

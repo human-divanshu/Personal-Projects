@@ -1,5 +1,7 @@
 package in.dsingh.domaindata.domaindetails.service;
 
+import static in.dsingh.domaindata.domaindetails.service.RequestValidator.getWordsAsString;
+
 import in.dsingh.domaindata.domaindetails.cron.DomainHealth;
 import in.dsingh.domaindata.domaindetails.cron.response.WebsiteMetaInfoResponse;
 import java.io.IOException;
@@ -67,9 +69,10 @@ public class WebPageParser {
             urlList.add(newUrl);
           }
         }
+
         websiteMetaInfoResponse.setUrls(urlList);
-        websiteMetaInfoResponse.setBodyText(document.text());
-        websiteMetaInfoResponse.setTitleText(document.title());
+        websiteMetaInfoResponse.setBodyText(getWordsAsString(document.text()));
+        websiteMetaInfoResponse.setTitleText(getWordsAsString(document.title()));
 
         return Optional.of(websiteMetaInfoResponse);
       }
@@ -77,6 +80,7 @@ public class WebPageParser {
 
     return Optional.empty();
   }
+
 
   private boolean isContactPage(String newUrl) {
     List<String> contactWords = new ArrayList<>();
