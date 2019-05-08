@@ -1,6 +1,8 @@
 package in.dsingh.domaindata.domaindetails.service;
 
+import static in.dsingh.domaindata.domaindetails.service.RequestValidator.bodyLength;
 import static in.dsingh.domaindata.domaindetails.service.RequestValidator.getWordsAsString;
+import static in.dsingh.domaindata.domaindetails.service.RequestValidator.titleLength;
 
 import in.dsingh.domaindata.domaindetails.cron.DomainHealth;
 import in.dsingh.domaindata.domaindetails.cron.response.WebsiteMetaInfoResponse;
@@ -71,8 +73,8 @@ public class WebPageParser {
         }
 
         websiteMetaInfoResponse.setUrls(urlList);
-        websiteMetaInfoResponse.setBodyText(getWordsAsString(document.text()));
-        websiteMetaInfoResponse.setTitleText(getWordsAsString(document.title()));
+        websiteMetaInfoResponse.setBodyText(getWordsAsString(document.text(), bodyLength));
+        websiteMetaInfoResponse.setTitleText(getWordsAsString(document.title(), titleLength));
 
         return Optional.of(websiteMetaInfoResponse);
       }

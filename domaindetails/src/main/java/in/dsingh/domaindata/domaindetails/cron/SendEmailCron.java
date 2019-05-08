@@ -1,6 +1,8 @@
 package in.dsingh.domaindata.domaindetails.cron;
 
+import static in.dsingh.domaindata.domaindetails.service.RequestValidator.bodyLength;
 import static in.dsingh.domaindata.domaindetails.service.RequestValidator.getWordsAsString;
+import static in.dsingh.domaindata.domaindetails.service.RequestValidator.titleLength;
 
 import in.dsingh.domaindata.domaindetails.controllers.request.SendEmailRequest;
 import in.dsingh.domaindata.domaindetails.data.dbhelpers.DomainEntityDbHelper;
@@ -81,9 +83,12 @@ public class SendEmailCron {
 
         try {
           String fromEmailId = getNextFromEmailId();
+
           SendEmailRequest sendEmailRequest = new SendEmailRequest(String.valueOf(entity.getId()),
-              entity.getDomainName(), emailId, fromEmailId, getWordsAsString(entity.getTitleText()),
-              getWordsAsString(entity.getBodyText()), "kuchbhi");
+              entity.getDomainName(), emailId, fromEmailId,
+              getWordsAsString(entity.getTitleText(), titleLength),
+              getWordsAsString(entity.getBodyText(), bodyLength), "kuchbhi");
+
           Boolean successResponse = emailsService.sendEmail(sendEmailRequest);
 
           if (successResponse) {

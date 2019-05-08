@@ -9,7 +9,11 @@ public class RequestValidator {
 
   private static Pattern pattern = Pattern.compile("[a-zA-Z0-9]+");
 
-  public static String getWordsAsString(String text) {
+  public static Integer titleLength = 40;
+
+  public static Integer bodyLength = 160;
+
+  public static String getWordsAsString(String text, Integer trimLength) {
     Matcher matcher = pattern.matcher(text);
     List<String> words = new ArrayList<>();
     while (matcher.find()) {
@@ -25,7 +29,8 @@ public class RequestValidator {
       sb.append(" " + word);
     }
 
-    return sb.toString().trim();
+    String finalStr = sb.toString().trim();
+    return finalStr.substring(0, Math.min(finalStr.length(), trimLength));
   }
 
 }
