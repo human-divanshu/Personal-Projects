@@ -8,6 +8,7 @@ import in.dsingh.domaindata.domaindetails.cron.response.DnpediaEntry;
 import in.dsingh.domaindata.domaindetails.cron.response.DnpediaResponse;
 import in.dsingh.domaindata.domaindetails.data.entities.DnpediaCronEntity;
 import in.dsingh.domaindata.domaindetails.data.entities.DomainEntity;
+import in.dsingh.domaindata.domaindetails.data.repositories.DnpediaCronRepository;
 import in.dsingh.domaindata.domaindetails.data.repositories.DomainEntityRepository;
 import in.dsingh.domaindata.domaindetails.service.DictCheck;
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ public class DomainEntityDbHelper {
 
   @Autowired
   private DomainEntityRepository domainEntityRepository;
+
+  @Autowired
+  private DnpediaCronRepository dnpediaCronRepository;
 
   @Autowired
   private DictCheck dictCheck;
@@ -84,10 +88,21 @@ public class DomainEntityDbHelper {
       String verificationStr = subStr.isPresent() ? subStr.get() : "";
       DomainEntity domainEntity = new DomainEntity(domain, dnpediaCronEntity, verificationStr,
           Long.valueOf(verificationStr.length()));
-      domainEntityList.add(domainEntity);
+//      domainEntityList.add(domainEntity);
+      createDomainNameEntry(domainEntity, dnpediaCronEntity);
     }
-    domainEntityRepository.save(domainEntityList);
+//    domainEntityRepository.save(domainEntityList);
     return new SuccessResponse();
+  }
+
+  private void createDomainNameEntry(DomainEntity domainEntity, DnpediaCronEntity dnpediaCronEntity) {
+    try {
+      DnpediaCronEntity cronEntity = dnpediaCronRepository.findOne(dnpediaCronEntity.getId());
+      domainEntity.setDnpediaCronEntity(cronEntity);
+      domainEntityRepository.save(domainEntity);
+    } catch (Exception e) {
+      log.error("Error while creating domain name entry {}", e);
+    }
   }
 
   public List<DomainEntity> getDomainToSendEmail() {
