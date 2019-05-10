@@ -49,6 +49,10 @@ public class SendEmailCron {
   }
 
   static {
+    fromEmailList.add("ken.garcia@websitechamp.tech");
+    fromEmailList.add("harold.scott@websitechamp.tech");
+    fromEmailList.add("kathryne.watson@websitechamp.tech");
+    fromEmailList.add("maria.young@websitechamp.tech");
     fromEmailList.add("annie.owens@websitechamp.tech");
     fromEmailList.add("jessica.miller@websitechamp.tech");
     fromEmailList.add("keffy.grace@websitechamp.tech");
