@@ -59,7 +59,8 @@ public class SendEmailCron {
     currentFromEmailIndex = 0;
   }
 
-  @Scheduled(fixedDelayString = "150000")
+  // run every minute
+  @Scheduled(fixedDelayString = "60000")
   public void sendEmail() {
 
     if(!sendEmail) {
